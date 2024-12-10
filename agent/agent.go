@@ -17,7 +17,7 @@ import (
 	"github.com/influxdata/telegraf/plugins/serializers/influx"
 )
 
-// Agent runs a set of plugins.
+// Agent runs a set of plugin.
 type Agent struct {
 	Config *config.Config
 }
