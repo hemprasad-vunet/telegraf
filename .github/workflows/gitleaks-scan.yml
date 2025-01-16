@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - '**' # Scan all branches (optional)
   pull_request:
     branches:
       - main
@@ -14,14 +13,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Run Gitleaks
+      - name: Install Gitleaks
+        run: |
+          curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-amd64.tar.gz | tar -xz
+          sudo mv gitleaks /usr/local/bin
+
       - name: Run Gitleaks
-        uses: zricethezav/gitleaks-action@v2
+        run: |
+          gitleaks detect --source=. --report-format=json --report-path=gitleaks-report.json
+
+      - name: Upload Report
+        if: failure()
+        uses: actions/upload-artifact@v3
         with:
-          config: .gitleaks.toml  # Optional: Provide custom config if available
-          report_format: json    # Export report as JSON
-          report_path: gitleaks-report.json
+          name: gitleaks-report
+          path: gitleaks-report.json
