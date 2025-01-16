@@ -13,20 +13,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Step 2: Install Gitleaks
       - name: Install Gitleaks
         run: |
           curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-amd64.tar.gz | tar -xz
           sudo mv gitleaks /usr/local/bin
 
+      # Step 3: Run Gitleaks
       - name: Run Gitleaks
         run: |
           gitleaks detect --source=. --report-format=json --report-path=gitleaks-report.json
 
+      # Step 4: Upload Report
       - name: Upload Report
-        if: failure()
         uses: actions/upload-artifact@v3
         with:
           name: gitleaks-report
