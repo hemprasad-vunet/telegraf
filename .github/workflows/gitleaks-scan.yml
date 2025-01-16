@@ -1,0 +1,36 @@
+
+name: Gitleaks Secret Scan
+
+on:
+  push:
+    branches:
+      - vugrafana
+
+jobs:
+  gitleaks:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Install Gitleaks
+      - name: Install Gitleaks
+        run: |
+          curl -sSL https://github.com/gitleaks/gitleaks/releases/download/v8.23.1/gitleaks_8.23.1_linux_x64.tar.gz -o gitleaks.tar.gz
+          tar -xzf gitleaks.tar.gz
+          chmod +x gitleaks
+          sudo mv gitleaks /usr/local/bin/gitleaks
+
+      # Step 3: Run Gitleaks
+      - name: Run Gitleaks
+        run: |
+          gitleaks detect --source=. --report-format=json --report-path=gitleaks-report.json || true
+
+      # Step 4: Upload Gitleaks Report
+      - name: Upload Gitleaks Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: gitleaks-report
+          path: gitleaks-report.json
