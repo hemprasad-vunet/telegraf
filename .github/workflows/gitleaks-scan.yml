@@ -23,7 +23,7 @@ jobs:
           curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-amd64.tar.gz | tar -xz
           sudo mv gitleaks /usr/local/bin
 
-      # Step 3: Run Gitleaks
+      # Step 3: Run Gitleaks 1
       - name: Run Gitleaks
         run: |
           gitleaks detect --source=. --report-format=json --report-path=gitleaks-report.json
