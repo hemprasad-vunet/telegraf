@@ -4,7 +4,8 @@ name: Gitleaks Secret Scan
 on:
   push:
     branches:
-      - vugrafana
+      - main
+      - develop 
 
 jobs:
   gitleaks:
