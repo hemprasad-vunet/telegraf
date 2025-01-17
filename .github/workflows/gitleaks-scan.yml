@@ -31,10 +31,7 @@ jobs:
       # Step 4: Convert JSON to CSV
       - name: Convert Gitleaks JSON to CSV
         run: |
-          python3 - <<'EOF'
-import json
-import csv
-
+          echo "import json, csv
 input_file = 'gitleaks-report.json'
 output_file = 'gitleaks-report.csv'
 
@@ -51,8 +48,8 @@ with open(input_file, 'r') as json_file:
         writer = csv.DictWriter(csv_file, fieldnames=fields)
         writer.writeheader()
         for entry in data:
-            writer.writerow({field: entry.get(field, '') for field in fields})
-EOF
+            writer.writerow({field: entry.get(field, '') for field in fields})" > convert.py
+          python3 convert.py
 
       # Step 5: Upload CSV as an Artifact
       - name: Upload Gitleaks CSV Report
