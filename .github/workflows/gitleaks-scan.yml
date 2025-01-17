@@ -28,10 +28,13 @@ jobs:
         run: |
           gitleaks detect --source=. --report-format=json --report-path=gitleaks-report.json || true
 
-      # Step 4: Convert JSON to CSV
-      - name: Convert Gitleaks JSON to CSV
+      # Step 4: Write Python Script for Conversion
+      - name: Create Python Script to Convert JSON to CSV
         run: |
-          echo "import json, csv
+          echo "
+import json
+import csv
+
 input_file = 'gitleaks-report.json'
 output_file = 'gitleaks-report.csv'
 
@@ -48,10 +51,14 @@ with open(input_file, 'r') as json_file:
         writer = csv.DictWriter(csv_file, fieldnames=fields)
         writer.writeheader()
         for entry in data:
-            writer.writerow({field: entry.get(field, '') for field in fields})" > convert.py
-          python3 convert.py
+            writer.writerow({field: entry.get(field, '') for field in fields})
+          " > convert.py
 
-      # Step 5: Upload CSV as an Artifact
+      # Step 5: Execute Python Script
+      - name: Run Python Script
+        run: python3 convert.py
+
+      # Step 6: Upload CSV as an Artifact
       - name: Upload Gitleaks CSV Report
         uses: actions/upload-artifact@v3
         with:
