@@ -38,8 +38,7 @@ jobs:
       # Step 5: Create Python Script
       - name: Create Python Script
         run: |
-          cat << EOF > convert.py
-import json
+          echo 'import json
 import csv
 
 input_file = "gitleaks-report.json"
@@ -65,7 +64,7 @@ except FileNotFoundError:
     print(f"Error: {input_file} not found.")
 except json.JSONDecodeError:
     print("Error: Failed to decode JSON in {input_file}.")
-EOF
+' > convert.py
 
       # Step 6: List Files for Debugging
       - name: List Files in Directory
