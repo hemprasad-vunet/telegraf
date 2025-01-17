@@ -31,8 +31,7 @@ jobs:
       # Step 4: Convert JSON to CSV
       - name: Convert Gitleaks JSON to CSV
         run: |
-          echo "Converting JSON report to CSV..."
-          python3 <<EOF
+          python3 - <<'EOF'
 import json
 import csv
 
