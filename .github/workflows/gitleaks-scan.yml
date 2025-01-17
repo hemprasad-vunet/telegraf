@@ -37,7 +37,7 @@ jobs:
 
       # Step 5: Run Python Script
       - name: Run Python Script
-        run: python3 ./convert.py
+        run: python3 .github/scripts/convert.py
 
       # Step 6: Upload CSV Report as Artifact
       - name: Upload Gitleaks CSV Report
