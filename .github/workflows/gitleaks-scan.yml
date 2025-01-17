@@ -28,8 +28,8 @@ jobs:
         run: |
           gitleaks detect --source=. --report-format=json --report-path=gitleaks-report.json || true
 
-      # Step 4: Write Python Script for Conversion
-      - name: Create Python Script to Convert JSON to CSV
+      # Step 4: Write Python Script to File
+      - name: Create Python Script
         run: |
           echo "
 import json
@@ -52,15 +52,16 @@ with open(input_file, 'r') as json_file:
         writer.writeheader()
         for entry in data:
             writer.writerow({field: entry.get(field, '') for field in fields})
-          " > convert.py
+" > convert.py
 
       # Step 5: Execute Python Script
       - name: Run Python Script
         run: python3 convert.py
 
-      # Step 6: Upload CSV as an Artifact
+      # Step 6: Upload CSV Report as Artifact
       - name: Upload Gitleaks CSV Report
         uses: actions/upload-artifact@v3
         with:
           name: gitleaks-csv-report
           path: gitleaks-report.csv
+        
