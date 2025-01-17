@@ -38,7 +38,8 @@ jobs:
       # Step 5: Create Python Script
       - name: Create Python Script
         run: |
-          echo 'import json
+          cat << EOF > convert.py
+import json
 import csv
 
 input_file = "gitleaks-report.json"
@@ -50,12 +51,9 @@ fields = [
     "Entropy", "Fingerprint"
 ]
 
-with open(input_file, "r") as json_file:
-    try:
+try:
+    with open(input_file, "r") as json_file:
         data = json.load(json_file)
-    except json.JSONDecodeError:
-        print("Invalid JSON format.")
-        exit(1)
 
     with open(output_file, "w", newline="", encoding="utf-8") as csv_file:
         writer = csv.DictWriter(csv_file, fieldnames=fields)
@@ -63,7 +61,11 @@ with open(input_file, "r") as json_file:
         if isinstance(data, list):
             for entry in data:
                 writer.writerow({field: entry.get(field, "") for field in fields})
-' > convert.py
+except FileNotFoundError:
+    print(f"Error: {input_file} not found.")
+except json.JSONDecodeError:
+    print("Error: Failed to decode JSON in {input_file}.")
+EOF
 
       # Step 6: List Files for Debugging
       - name: List Files in Directory
